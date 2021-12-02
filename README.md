@@ -98,6 +98,33 @@ USER>set proxy = gw.new("dc.MyLibrary")
 USER>w proxy.GetNumber()
 123
 ```
+Windows(非コンテナ環境)の場合も同様。事前にExternal Language Serverの%DotNet Serverを起動しておくこと。  
+[SMP][システム管理][構成][接続性][External Language Servers]
+```
+USER>set gw=$SYSTEM.external.getRemoteGateway("localhost",53372)
+USER>do gw.addToPath("C:\Users\irismeister\Source\repos\adonet\MyLibrary\bin\Release\MyLibrary.dll")
+```
+## Genericタイプ
+ラッパー経由でのアクセスになります。
+```
+USER>set proxy = gw.new("dc.GenericList")
+<THROW>%Constructor+25^%Net.Remote.Object.1 *%Net.Remote.Exception <GATEWAY> System.Exception InterSystems.Data.IRISClient.Gateway.Gateway.loadClass(String?className) Class not found: dc+GenericList
+USER 4e1>q
+USER>set proxy = gw.new("dc.GenericListWrapper")
+USER>set l = proxy.GetIntList()
+USER>d lint.Add(1)
+1
+
+USER>d lint.Add(2)
+2
+USER>set lstr = proxy.GetStringList()
+USER>d lstr.Add("abc")
+abc
+
+USER>d lstr.Add("日本語")
+日本語
+```
+
 ## 参考にしたコードサンプル
 https://github.com/intersystems/Samples-PEX-Course
 

@@ -6,3 +6,4 @@ datavol/share/*.data
 *.so
 datavol/share/SJIS.txt
 src2
+*.avro

@@ -14,17 +14,6 @@ services:
         - "./c-src:/home/irisowner/src"
         - ./datavol/share:/home/irisowner/share 
 
-#  apache:
-#    image: httpd:2.4
-#    init: true
-#    hostname: apache
-#    ports:
-#      - 80:80        
-#    environment:
-#    - TZ=JST-9
-#    volumes:
-#    - ./datavol/App:/usr/local/apache2/htdocs/ 
-
   python:
     restart: always
     build:
@@ -56,3 +45,15 @@ services:
     - 9001:9001
     volumes:
     - ./MQTTBroker/conf:/mosquitto/config
+
+  dotnet-dev:
+    build:
+      context: dotnet-dev
+      dockerfile: Dockerfile
+    command: bash
+    restart: always
+    tty: true
+    environment:
+      - TZ=JST-9      
+    volumes:
+    - ./dotnet:/source2
