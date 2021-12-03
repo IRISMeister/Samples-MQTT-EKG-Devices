@@ -59,15 +59,17 @@ $ docker-compose exec iris mosquitto_sub -v -h "mqttbroker" -p 1883 -t /ID_123/X
 
 
 ## (バイナリ)ファイルを送る方法
-```
-# mosquitto_pub -h "mqttbroker" -p 1883 -t /ID_123/XGH/EKG/PT -f /home/irisowner/share/data1.data
-```
-data1.data等はこちらの[python](datavol/share/testdata.py)で作成しています。
-
+バイナリファイルを下記で作成します。
+[example.py](datavol/share/example.py)はavroエンコードされたファイルを作成します。[testdata.py](datavol/share/testdata.py)は単純なlong型の配列です。
 ```
 $ docker-compose exec python bash
 root@d20238018cbc:~# cd share/
+root@d20238018cbc:~/share# python example.py
 root@d20238018cbc:~/share# python testdata.py
+```
+
+```
+# mosquitto_pub -h "mqttbroker" -p 1883 -t /ID_123/XGH/EKG/PT -f /home/irisowner/share/example.avro
 ```
 
 # その他
@@ -123,6 +125,11 @@ abc
 
 USER>d lstr.Add("日本語")
 日本語
+```
+## .NETアプリケーションを呼び出す方法
+```
+$ docker-compose exec netgw bash
+root@f718a9177d25:/app# dotnet myapp.dll
 ```
 
 ## 参考にしたコードサンプル
