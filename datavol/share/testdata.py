@@ -1,6 +1,5 @@
 from struct import pack, unpack, calcsize
 
-#mydata = [(1, 2, 1023), (2, 3, 80), (3, 4, 4000)]
 mytuple= tuple(range(10))
 mydata=[mytuple]
 myfile = open('data1.data', 'wb')
@@ -14,9 +13,36 @@ myfile.close()
 from numpy import *
  
 na = array([]) 
-#array([1, 10, 100,101,102,3.14,104,8192,65536,99.999])
 for loop in range(100):
     na=append(na,array([loop, 10, 100,101,102,3.14,104,8192,65536,99.999]))
 
 # 書き込み
 na.tofile('data2.data')
+
+na = array([]) 
+for loop in range(1000):
+    na=append(na,array([loop, 10, 100,101,102,3.14,104,8192,65536,99.999]))
+
+# 書き込み
+na.tofile('80k.data')
+
+na = array([]) 
+for loop in range(4000):
+    na=append(na,array([loop, 10, 100,101,102,3.14,104,8192,65536,99.999]))
+
+# 書き込み
+na.tofile('320k.data')
+
+na = array([]) 
+for loop in range(40000):
+    na=append(na,array([loop, 10, 100,101,102,3.14,104,8192,65536,99.999]))
+
+# 書き込み
+na.tofile('3200k.data')
+
+na = array([]) 
+for loop in range(50000):
+    na=append(na,array([loop, 10, 100,101,102,3.14,104,8192,65536,99.999]))
+
+# 書き込み
+na.tofile('4000k.data')
