@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,11 +33,20 @@ namespace adonet
             dc.MyLibrary my = new dc.MyLibrary();
             IRISObject msg = my.GetEnsLibMQTT(1);
             byte[] b = msg.GetBytes("StringValue");
-
-            Console.WriteLine("");
+            using (MemoryStream ms = new MemoryStream())
+            {
+                ms.Write(b, 0, b.Length);
+                ms.Position = 0;
+                // may garble your console...
+                Console.WriteLine((new System.IO.StreamReader(ms)).ReadToEnd());
+            }
 
             //IRISObject input = my.DoSomethingNative("MyTopic", "MyData");
             //IRISObject input2 = my.DoSomethingSQL("MyTopic", "MyData");
+
+            Console.WriteLine("Hit any key");
+            Console.ReadLine();
+
         }
     }
 
