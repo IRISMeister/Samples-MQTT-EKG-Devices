@@ -131,6 +131,16 @@ USER>d lstr.Add("日本語")
 $ docker-compose exec netgw bash
 root@f718a9177d25:/app# dotnet myapp.dll
 ```
+## 単体実行用に.NETアプリケーションをビルド
+上記の.NETアプリケーションとは別の場所(donet-devコンテナ内)にデプロイされるので注意。
+```
+$ docker-compose exec dotnet-dev bash
+root@aa9e6466578e:/source# cp -fR /source2/* .
+root@aa9e6466578e:/source# mv lib mylib1/
+root@aa9e6466578e:/source# dotnet restore
+root@aa9e6466578e:/source# dotnet publish -c release -o /app
+root@aa9e6466578e:/source# dotnet /app/myapp.dll
+```
 
 ## 参考にしたコードサンプル
 https://github.com/intersystems/Samples-PEX-Course
