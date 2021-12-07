@@ -11,6 +11,10 @@ using InterSystems.Data.IRISClient;
 //for NAtive API
 using InterSystems.Data.IRISClient.ADO;
 
+using Avro;
+using Avro.IO;
+using Avro.Generic;
+
 namespace adonet
 {
     class Program
@@ -31,14 +35,38 @@ namespace adonet
 
 
             dc.MyLibrary my = new dc.MyLibrary();
-            IRISObject msg = my.GetEnsLibMQTT(1);
-            byte[] b = msg.GetBytes("StringValue");
-            using (MemoryStream ms = new MemoryStream())
-            {
-                ms.Write(b, 0, b.Length);
-                ms.Position = 0;
+            try {
+                IRISObject msg = my.GetEnsLibMQTT(1);
+                byte[] b = msg.GetBytes("StringValue");
+                MemoryStream myms = new MemoryStream();
+                myms.Write(b, 0, b.Length);
+                myms.Position = 0;
                 // may garble your console...
-                Console.WriteLine((new System.IO.StreamReader(ms)).ReadToEnd());
+                Console.WriteLine((new System.IO.StreamReader(myms)).ReadToEnd());
+
+                /*
+                Unhandled Exception: System.InvalidCastException: Unable to cast object of type 'System.Object[]' to type 'System.Int32[]'.
+                at Avro.Generic.DefaultReader.Read[T](T reuse, Decoder decoder)
+                at adonet.Program.Main(String[] args) in /source/myapp/Program.cs:line 54
+
+                string schema="{\"type\": \"array\", \"items\": \"int\"}";
+                Schema rs;
+                Schema ws;
+                rs = Schema.Parse(schema);
+                ws = Schema.Parse(schema);
+                myms.Position = 0;
+                GenericReader<int[]> r = new GenericReader<int[]>(ws, rs);
+                Avro.IO.Decoder d = new BinaryDecoder(myms);
+
+                int[] reuse = default( int[] );
+                Console.WriteLine("Now Read");
+                r.Read( reuse, d );
+                */
+            }
+            catch (Exception e) {
+                if (e.Source=="Avro") throw;
+                Console.WriteLine("No EnsLib.MQTT.Message found.");
+                Console.WriteLine(e.Source);
             }
 
             //IRISObject input = my.DoSomethingNative("MyTopic", "MyData");

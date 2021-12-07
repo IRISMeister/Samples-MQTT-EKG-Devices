@@ -137,7 +137,8 @@ root@f718a9177d25:/app# dotnet myapp.dll
 $ docker-compose exec dotnet-dev bash
 root@aa9e6466578e:/source# cp -fR /source2/* .
 root@aa9e6466578e:/source# mv lib mylib1/
-root@aa9e6466578e:/source# dotnet restore
+root@aa9e6466578e:/source# dotnet restore mylib1/mylib1.csproj
+root@aa9e6466578e:/source# dotnet restore myapp/myapp.csproj 
 root@aa9e6466578e:/source# dotnet publish -c release -o /app
 root@aa9e6466578e:/source# dotnet /app/myapp.dll
 ```
