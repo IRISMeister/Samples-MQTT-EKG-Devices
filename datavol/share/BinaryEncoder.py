@@ -15,7 +15,7 @@ raw_bytes = bytes_writer.getvalue()
 print(len(raw_bytes))
 print(type(raw_bytes))
 
-f = open('example2.avro', 'wb')
+f = open('BinaryEncoder.avro', 'wb')
 f.write(raw_bytes)
 f.close()
 

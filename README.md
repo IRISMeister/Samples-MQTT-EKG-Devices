@@ -57,19 +57,18 @@ $ docker-compose exec iris mosquitto_pub -h "mqttbroker" -p 1883 -t /ID_123/XGH/
 $ docker-compose exec iris mosquitto_sub -v -h "mqttbroker" -p 1883 -t /ID_123/XGH/EKG/PT/#
 ```
 
-
 ## (バイナリ)ファイルを送る方法
 バイナリファイルを下記で作成します。
-[example.py](datavol/share/example.py)はavroエンコードされたファイルを作成します。[testdata.py](datavol/share/testdata.py)は単純なlong型の配列です。
+[example.py](datavol/share/BinaryEncoder.py)はavroエンコードされたファイルを作成します。[testdata.py](datavol/share/testdata.py)は単純なlong型の配列です。
 ```
 $ docker-compose exec python bash
 root@d20238018cbc:~# cd share/
-root@d20238018cbc:~/share# python example.py
+root@d20238018cbc:~/share# python BinaryEncoder.py
 root@d20238018cbc:~/share# python testdata.py
 ```
 
 ```
-# mosquitto_pub -h "mqttbroker" -p 1883 -t /ID_123/XGH/EKG/PT -f /home/irisowner/share/example.avro
+# mosquitto_pub -h "mqttbroker" -p 1883 -t /ID_123/XGH/EKG/PT -f /home/irisowner/share/BinaryEncoder.avro
 ```
 
 # その他
@@ -139,7 +138,7 @@ root@aa9e6466578e:/source# cp -fR /source2/* .
 root@aa9e6466578e:/source# mv lib mylib1/
 root@aa9e6466578e:/source# dotnet restore mylib1/mylib1.csproj
 root@aa9e6466578e:/source# dotnet restore myapp/myapp.csproj 
-root@aa9e6466578e:/source# dotnet publish -c release -o /app
+root@aa9e6466578e:/source# dotnet publish -c debug -o /app
 root@aa9e6466578e:/source# dotnet /app/myapp.dll
 ```
 

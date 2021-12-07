@@ -38,16 +38,12 @@ namespace adonet
             try {
                 IRISObject msg = my.GetEnsLibMQTT(1);
                 byte[] b = msg.GetBytes("StringValue");
+                Console.WriteLine(b.Length+ " bytes received.");
                 MemoryStream myms = new MemoryStream();
                 myms.Write(b, 0, b.Length);
                 myms.Position = 0;
                 // may garble your console...
-                Console.WriteLine((new System.IO.StreamReader(myms)).ReadToEnd());
-
-                /*
-                Unhandled Exception: System.InvalidCastException: Unable to cast object of type 'System.Object[]' to type 'System.Int32[]'.
-                at Avro.Generic.DefaultReader.Read[T](T reuse, Decoder decoder)
-                at adonet.Program.Main(String[] args) in /source/myapp/Program.cs:line 54
+                //Console.WriteLine((new System.IO.StreamReader(myms)).ReadToEnd());
 
                 string schema="{\"type\": \"array\", \"items\": \"int\"}";
                 Schema rs;
@@ -55,18 +51,20 @@ namespace adonet
                 rs = Schema.Parse(schema);
                 ws = Schema.Parse(schema);
                 myms.Position = 0;
-                GenericReader<int[]> r = new GenericReader<int[]>(ws, rs);
+                GenericReader<object> r = new GenericReader<object>(ws, rs);
                 Avro.IO.Decoder d = new BinaryDecoder(myms);
 
-                int[] reuse = default( int[] );
-                Console.WriteLine("Now Read");
-                r.Read( reuse, d );
-                */
+                object reuse = default( object );
+                Object values=r.Read( reuse,d);
+                Console.WriteLine(values.ToString());
+                Console.WriteLine("Received :"+values.GetType());
+                // How can I see the contents?
+
             }
             catch (Exception e) {
-                if (e.Source=="Avro") throw;
-                Console.WriteLine("No EnsLib.MQTT.Message found.");
-                Console.WriteLine(e.Source);
+                Console.WriteLine("Exception Source:"+e.Source);
+                throw;
+                //Console.WriteLine("No EnsLib.MQTT.Message found.");
             }
 
             //IRISObject input = my.DoSomethingNative("MyTopic", "MyData");
