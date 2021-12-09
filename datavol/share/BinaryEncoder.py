@@ -4,12 +4,12 @@ import avro.io
 
 from avro.datafile import DataFileReader, DataFileWriter
 
-schema = avro.schema.Parse(open("example.avsc", "rb").read())
+schema = avro.schema.Parse(open("BinaryEncoder.avsc", "rb").read())
 
 writer = avro.io.DatumWriter(schema)
 bytes_writer = io.BytesIO()
 encoder = avro.io.BinaryEncoder(bytes_writer)
-writer.write([1,2,3,4,5],encoder)
+writer.write([1,2,3,4,5,6,7,8,9,10],encoder)
 
 raw_bytes = bytes_writer.getvalue()
 print(len(raw_bytes))

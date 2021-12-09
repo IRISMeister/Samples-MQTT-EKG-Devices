@@ -126,11 +126,13 @@ USER>d lstr.Add("日本語")
 日本語
 ```
 ## .NETアプリケーションを呼び出す方法
+SDKは含まれないのでbuildは出来ません。
 ```
 $ docker-compose exec netgw bash
 root@f718a9177d25:/app# dotnet myapp.dll
 ```
 ## 単体実行用に.NETアプリケーションをビルド
+SDKが含まれています。
 上記の.NETアプリケーションとは別の場所(donet-devコンテナ内)にデプロイされるので注意。
 ```
 $ docker-compose exec dotnet-dev bash
