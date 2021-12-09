@@ -47,8 +47,8 @@ namespace adonet
                 string path = "/share/BinaryEncoder.avsc";
                 FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
                 var reader = new StreamReader(fs, Encoding.UTF8);
-                //schema="{\"type\": \"array\", \"items\": \"int\"}";
-                schema = reader.ReadLine();
+                //string schema="{\"type\": \"array\", \"items\": \"int\"}";
+                string schema = reader.ReadLine();
                 fs.Close();
                 Console.WriteLine(schema);
 
