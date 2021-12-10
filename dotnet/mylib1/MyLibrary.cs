@@ -32,25 +32,33 @@ namespace dc
             IRIS iris = null;
             try
             {
+                // any better way than try-catch ?
                 iris = GatewayContext.GetIRIS();
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
 
-                // consider we are not in External gateway server context
-                String host = "localhost";
-                String port = "1972";
-                String username = "SuperUser";
-                String password = "SYS";
-                String Namespace = "INTEROP";
-                IRISConnection connection = new IRISConnection();
-                connection.ConnectionString = "Server = " + host + "; Port = " + port + "; Namespace = " + Namespace + "; Password = " + password + "; User ID = " + username;
-                connection.Open();
+                Console.WriteLine("Establishing new connection.");
+                try {
+                    // consider we are not in External gateway server context
+                    String host = "iris";
+                    String port = "1972";
+                    String username = "SuperUser";
+                    String password = "SYS";
+                    String Namespace = "INTEROP";
+                    IRISConnection connection = new IRISConnection();
+                    connection.ConnectionString = "Server = " + host + "; Port = " + port + "; Namespace = " + Namespace + "; Password = " + password + "; User ID = " + username;
+                    connection.Open();
 
-                iris = IRIS.CreateIRIS(connection);
+                    iris = IRIS.CreateIRIS(connection);
+                }
+                catch (Exception e2)
+                {
+                    Console.WriteLine(e2.ToString());
+
+                }
             }
-
             // Native API
             // Save decoded values into IRIS via Native API
             seqno = (long)iris.ClassMethodLong("Solution.RAWDATA", "GETNEWID");
@@ -107,6 +115,7 @@ namespace dc
             {
                 Console.WriteLine(e.ToString());
                 // consider we are not in External gateway server context
+                Console.WriteLine("Establishing new connection.");
                 iris = IRIS.CreateIRIS(connection);
             }
 

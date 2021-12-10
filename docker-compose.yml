@@ -1,18 +1,19 @@
 version: '3.7'
 services:
   iris:
-      hostname: iris
-      build: 
-        context: .
-        dockerfile: Dockerfile
-      ports:
-        - 52773:52773         
-      environment:
+    hostname: iris
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 1972:1972         
+      - 52773:52773         
+    environment:
       - TZ=JST-9
-      volumes:
-        - "./datavol:/datavol"
-        - "./c-src:/home/irisowner/src"
-        - ./datavol/share:/home/irisowner/share 
+    volumes:
+      - "./datavol:/datavol"
+      - "./c-src:/home/irisowner/src"
+      - ./datavol/share:/home/irisowner/share 
 
   python:
     restart: always
@@ -21,9 +22,9 @@ services:
     working_dir: '/root/'
     tty: true
     environment:
-    - TZ=JST-9
+      - TZ=JST-9
     volumes:
-    - ./datavol/share:/root/share 
+      - ./datavol/share:/root/share 
 
   netgw:
     image: intersystemsdc/pexservice:latest
@@ -35,20 +36,22 @@ services:
       - 55556:55556
     environment:
       - TZ=JST-9    
+    volumes:
+      - ./datavol/share:/share
 
   mqttbroker:
     image: eclipse-mosquitto
     hostname: mqttbroker
     restart: on-failure
     ports:
-    - 1883:1883
-    - 9001:9001
+      - 1883:1883
+      - 9001:9001
     volumes:
-    - ./MQTTBroker/conf:/mosquitto/config
+      - ./MQTTBroker/conf:/mosquitto/config
 
   dotnet-dev:
     build:
-      context: dotnet-dev
+      context: dotnet21-dev
       dockerfile: Dockerfile
     command: bash
     restart: always
@@ -56,4 +59,5 @@ services:
     environment:
       - TZ=JST-9      
     volumes:
-    - ./dotnet:/source2
+      - ./dotnet:/source2
+      - ./datavol/share:/share

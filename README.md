@@ -57,19 +57,19 @@ $ docker-compose exec iris mosquitto_pub -h "mqttbroker" -p 1883 -t /ID_123/XGH/
 $ docker-compose exec iris mosquitto_sub -v -h "mqttbroker" -p 1883 -t /ID_123/XGH/EKG/PT/#
 ```
 
-
 ## (バイナリ)ファイルを送る方法
 バイナリファイルを下記で作成します。
-[example.py](datavol/share/example.py)はavroエンコードされたファイルを作成します。[testdata.py](datavol/share/testdata.py)は単純なlong型の配列です。
+[example.py](datavol/share/BinaryEncoder.py)はavroエンコードされたファイルを作成します。[testdata.py](datavol/share/testdata.py)は単純なlong型の配列です。
 ```
 $ docker-compose exec python bash
 root@d20238018cbc:~# cd share/
-root@d20238018cbc:~/share# python example.py
 root@d20238018cbc:~/share# python testdata.py
+root@d20238018cbc:~/share# python BinaryEncoder.py
+root@d20238018cbc:~/share# python SimpleClass-decoder.py
 ```
 
 ```
-# mosquitto_pub -h "mqttbroker" -p 1883 -t /ID_123/XGH/EKG/PT -f /home/irisowner/share/example.avro
+# mosquitto_pub -h "mqttbroker" -p 1883 -t /ID_123/XGH/EKG/PT -f /home/irisowner/share/SimpleClass.avro
 ```
 
 # その他
@@ -127,9 +127,60 @@ USER>d lstr.Add("日本語")
 日本語
 ```
 ## .NETアプリケーションを呼び出す方法
+SDKは含まれないのでbuildは出来ません。
 ```
 $ docker-compose exec netgw bash
 root@f718a9177d25:/app# dotnet myapp.dll
+```
+## 単体実行用に.NETアプリケーションをビルド
+SDKが含まれています。
+上記の.NETアプリケーションとは別の場所(donet-devコンテナ内)にデプロイされるので注意。
+```
+$ docker-compose exec dotnet-dev bash
+root@aa9e6466578e:/source# ./build.sh
+root@aa9e6466578e:/source# dotnet /app/myapp.dll
+1
+abc
+dc.MyLibrary
+106 bytes received.
+Received ToString():dc.SimpleClass
+Received GetType():dc.SimpleClass
+Values read from EnsLib.MQTT.Message.
+myString:this is a SimpleClass
+myBytes: [1] [2] [3]
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at InterSystems.Data.IRISClient.ADO.IRIS.CreateIRIS(IRISADOConnection conn)
+   at dc.MyLibrary.DoSomethingNative(String mqtttopic, String mqttmsg) in /source/mylib1/MyLibrary.cs:line 36
+Establishing new connection.
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at InterSystems.Data.IRISClient.ADO.IRIS.CreateIRIS(IRISADOConnection conn)
+   at dc.MyLibrary.DoSomethingSQL(String mqtttopic, String mqttmsg) in /source/mylib1/MyLibrary.cs:line 112
+Establishing new connection.
+Hit any key
+root@aa9e6466578e:/source# dotnet /app/genavro.dll
+Generating avro files.
+2 objects found.
+Class=System.String, Value=aaa
+Class=System.String, Value=bbb
+2 objects found.
+Class=System.Single, Value=23.67
+Class=System.Single, Value=22.78
+5 objects found.
+Class=System.Int32, Value=1
+Class=System.Int32, Value=2
+Class=System.Int32, Value=3
+Class=System.Int32, Value=4
+Class=System.Int32, Value=5
+this is a ComplexClass
+this is a SimpleClass
+root@aa9e6466578e:/source# ls -l *.avro
+-rw-r--r-- 1 root root 139 Dec 10 18:34 ComplexClass.avro
+-rw-r--r-- 1 root root 106 Dec 10 18:34 SimpleClass.avro
+```
+
+avro schemaからC#クラスを作成。(dotnet31-dev使用時のみ)
+```
+root@80352f0c46d2:~#. dotnet/tools/avrogen -s /share/SimpleClass.avsc ./gen --namespace foo:foo
 ```
 
 ## 参考にしたコードサンプル
