@@ -59,7 +59,9 @@ $ docker-compose exec iris mosquitto_sub -v -h "mqttbroker" -p 1883 -t /ID_123/X
 
 ## (バイナリ)ファイルを送る方法
 バイナリファイルを下記で作成します。
-[example.py](datavol/share/BinaryEncoder.py)はavroエンコードされたファイルを作成します。[testdata.py](datavol/share/testdata.py)は単純なlong型の配列です。
+[BinaryEncoder.py](datavol/share/BinaryEncoder.py)はintの[配列](datavol/share/BinaryEncoder.avsc)がavroエンコードされたファイルを作成します。  
+[SimpleClass-decoder.py](datavol/share/SimpleClass-decoder.py)は[record](datavol/share/SimpleClass.avsc)がavroエンコードされたファイルを作成します。  
+[testdata.py](datavol/share/testdata.py)は単純なlong型の配列です。
 ```
 $ docker-compose exec python bash
 root@d20238018cbc:~# cd share/
