@@ -144,6 +144,11 @@ root@aa9e6466578e:/source# dotnet publish -c debug -o /app
 root@aa9e6466578e:/source# dotnet /app/myapp.dll
 ```
 
+avro schemaからC#クラスを作成。
+```
+root@aa9e6466578e:~#. dotnet/tools/avrogen -s /share/Reflect.avsc ./gen --namespace foo:foo
+```
+
 ## 参考にしたコードサンプル
 https://github.com/intersystems/Samples-PEX-Course
 

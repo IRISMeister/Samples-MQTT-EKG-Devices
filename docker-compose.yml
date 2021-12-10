@@ -51,7 +51,7 @@ services:
 
   dotnet-dev:
     build:
-      context: dotnet-dev
+      context: dotnet21-dev
       dockerfile: Dockerfile
     command: bash
     restart: always

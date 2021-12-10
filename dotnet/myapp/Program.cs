@@ -197,45 +197,19 @@ namespace adonet
                         ]
                     }
                 ]
-                }";
+            }";
 
-            Z z = new Z()
-            {
-                myUInt = 1,
-                myULong = 2L,
-                myUBool = true,
-                myUDouble = 3.14,
-                myUFloat = (float)1.59E-3,
-                myUBytes = new byte[3] { 0x01, 0x02, 0x03 },
-                myUString = "abc",
-                myInt = 1,
-                myLong = 2L,
-                myBool = true,
-                myDouble = 3.14,
-                myFloat = (float)1.59E-2,
-                myBytes = new byte[3] { 0x01, 0x02, 0x03 },
-                myString = "def",
-                myNull = null,
-                myFixed = new byte[16] { 0x01, 0x02, 0x03, 0x04, 0x01, 0x02, 0x03, 0x04, 0x01, 0x02, 0x03, 0x04, 0x01, 0x02, 0x03, 0x04 },
-                myA = new A() { f1 = 3L },
-                myNullableA = new A() { f1 = 4L },
-                myE = MyEnum.B,
-                myArray = new List<byte[]>() { new byte[] { 0x01, 0x02, 0x03, 0x04 } },
-                myArray2 = new List<newRec>() { new newRec() { f1 = 4L } },
-                myMap = new Dictionary<string, string>()
-                {
-                    ["abc"] = "123"
-                },
-                myMap2 = new Dictionary<string, newRec>()
-                {
-                    ["abc"] = new newRec() { f1 = 5L }
-                },
-                myObject = new A() { f1 = 6L },
-                myArray3 = new List<List<object>>() { new List<object>() { 7.0, "def" } }
-            };
-
+            Z z= Z.Populate();
             r=ReflectReader.test<Z>(schema, z);
             Console.WriteLine(((Z)r).myString);
+        /*
+            SimpleClass s= SimpleClass.Populate();
+            schema=SimpleClass.SCHEMA;
+            Console.WriteLine(schema);
+
+            r=ReflectReader.test<SimpleClass>(schema, s);
+            Console.WriteLine(((SimpleClass)r).myString);
+        */
 
         }
     }
