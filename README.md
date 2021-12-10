@@ -136,15 +136,11 @@ SDKが含まれています。
 上記の.NETアプリケーションとは別の場所(donet-devコンテナ内)にデプロイされるので注意。
 ```
 $ docker-compose exec dotnet-dev bash
-root@aa9e6466578e:/source# cp -fR /source2/* .
-root@aa9e6466578e:/source# mv lib mylib1/
-root@aa9e6466578e:/source# dotnet restore mylib1/mylib1.csproj
-root@aa9e6466578e:/source# dotnet restore myapp/myapp.csproj 
-root@aa9e6466578e:/source# dotnet publish -c debug -o /app
+root@aa9e6466578e:/source# ./build.sh
 root@aa9e6466578e:/source# dotnet /app/myapp.dll
 ```
 
-avro schemaからC#クラスを作成。
+avro schemaからC#クラスを作成。(dotnet31-dev使用時のみ)
 ```
 root@aa9e6466578e:~#. dotnet/tools/avrogen -s /share/Reflect.avsc ./gen --namespace foo:foo
 ```

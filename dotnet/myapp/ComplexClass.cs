@@ -35,8 +35,65 @@ public class newRec
     public long f1 { get; set; }
 }
 
-public class Z
+public class ComplexClass
 {
+
+    public static string SCHEMA = @"{
+        ""protocol"" : ""MyProtocol"",
+        ""namespace"" : ""com.foo"",
+        ""types"" :
+        [
+            {
+                ""type"" : ""record"",
+                ""name"" : ""A"",
+                ""fields"" : [ { ""name"" : ""f1"", ""type"" : ""long"" } ]
+            },
+            {
+                ""type"" : ""enum"",
+                ""name"" : ""MyEnum"",
+                ""symbols"" : [ ""A"", ""B"", ""C"" ]
+            },
+            {
+                ""type"": ""fixed"",
+                ""size"": 16,
+                ""name"": ""MyFixed""
+            },
+            {
+                ""type"" : ""record"",
+                ""name"" : ""ComplexClass"",
+                ""fields"" :
+                [
+                    { ""name"" : ""myUInt"", ""type"" : [ ""int"", ""null"" ] },
+                    { ""name"" : ""myULong"", ""type"" : [ ""long"", ""null"" ] },
+                    { ""name"" : ""myUBool"", ""type"" : [ ""boolean"", ""null"" ] },
+                    { ""name"" : ""myUDouble"", ""type"" : [ ""double"", ""null"" ] },
+                    { ""name"" : ""myUFloat"", ""type"" : [ ""float"", ""null"" ] },
+                    { ""name"" : ""myUBytes"", ""type"" : [ ""bytes"", ""null"" ] },
+                    { ""name"" : ""myUString"", ""type"" : [ ""string"", ""null"" ] },
+                    { ""name"" : ""myInt"", ""type"" : ""int"" },
+                    { ""name"" : ""myLong"", ""type"" : ""long"" },
+                    { ""name"" : ""myBool"", ""type"" : ""boolean"" },
+                    { ""name"" : ""myDouble"", ""type"" : ""double"" },
+                    { ""name"" : ""myFloat"", ""type"" : ""float"" },
+                    { ""name"" : ""myBytes"", ""type"" : ""bytes"" },
+                    { ""name"" : ""myString"", ""type"" : ""string"" },
+                    { ""name"" : ""myNull"", ""type"" : ""null"" },
+                    { ""name"" : ""myFixed"", ""type"" : ""MyFixed"" },
+                    { ""name"" : ""myA"", ""type"" : ""A"" },
+                    { ""name"" : ""myNullableA"", ""type"" : [ ""null"", ""A"" ] },
+                    { ""name"" : ""myE"", ""type"" : ""MyEnum"" },
+                    { ""name"" : ""myArray"", ""type"" : { ""type"" : ""array"", ""items"" : ""bytes"" } },
+                    { ""name"" : ""myArray2"", ""type"" : { ""type"" : ""array"", ""items"" : { ""type"" : ""record"", ""name"" : ""newRec"", ""fields"" : [ { ""name"" : ""f1"", ""type"" : ""long""} ] } } },
+                    { ""name"" : ""myMap"", ""type"" : { ""type"" : ""map"", ""values"" : ""string"" } },
+                    { ""name"" : ""myMap2"", ""type"" : { ""type"" : ""map"", ""values"" : ""newRec"" } },
+                    { ""name"" : ""myObject"", ""type"" : [ ""MyEnum"", ""A"", ""null"" ] },
+                    { ""name"" : ""myArray3"", ""type"" : { ""type"" : ""array"", ""items"" : { ""type"" : ""array"", ""items"" : [ ""double"", ""string"", ""null"" ] } } }
+                ]
+            }
+        ]
+    }";
+
+
     public int? myUInt { get; set; }
 
     public long? myULong { get; set; }
@@ -88,9 +145,9 @@ public class Z
     public List<List<object>> myArray3 { get; set; }
 
 
-    public static Z Populate()
+    public static ComplexClass Populate()
     {
-        Z z = new Z()
+        ComplexClass z = new ComplexClass()
         {
             myUInt = 1,
             myULong = 2L,

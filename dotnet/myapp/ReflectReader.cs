@@ -28,11 +28,11 @@ using Avro.Reflect;
     public class ReflectReader
     {
     
-    public static T test<T>(string s, T value)
+    public static T protocol<T>(string s, T value)
     {
         Stream stream;
         Avro.Schema ws;
-        serialize<T>(s, value, out stream, out ws);
+        serializeByProtocol<T>(s, value, out stream, out ws);
 
         // save to a file.
         string path = "Reflect.avro";
@@ -47,23 +47,52 @@ using Avro.Reflect;
         return output;
     }
 
+    public static T schema<T>(string s, T value)
+    {
+        Stream stream;
+        Avro.Schema ws;
+        serializeBySchema<T>(s, value, out stream, out ws);
 
-    private static void serialize<T>(string writerSchema, T actual, out Stream stream, out Avro.Schema ws)
+        // save to a file.
+        string path = "SimpleClass.avro";
+        FileStream fs = new FileStream(
+            path, FileMode.Create, FileAccess.Write);
+        stream.CopyTo(fs);
+        fs.Close();
+        stream.Position = 0;
+
+
+        T output = deserialize<T>(stream, ws, ws);
+        return output;
+    }
+
+    private static void serializeBySchema<T>(string writerSchema, T actual, out Stream stream, out Avro.Schema ws)
+    {
+
+        ws = Schema.Parse(writerSchema);
+
+        var ms = new MemoryStream();
+        Encoder e = new BinaryEncoder(ms);
+
+        ReflectWriter<T> w = new ReflectWriter<T>(ws);
+
+        w.Write(actual, e);
+        ms.Flush();
+        ms.Position = 0;
+        stream = ms;
+    }
+
+    private static void serializeByProtocol<T>(string writerSchema, T actual, out Stream stream, out Avro.Schema ws)
     {
 
         Protocol protocol = Protocol.Parse(writerSchema);
         ws = null;
         foreach (var s in protocol.Types)
         {
-            if (s.Name == "Z")
+            if (s.Name == "ComplexClass")
             {
                 ws = s;
             }
-            if (s.Name == "SimpleClass")
-            {
-                ws = s;
-            }
-
         }
 
         var ms = new MemoryStream();

@@ -143,73 +143,16 @@ namespace adonet
                 Console.WriteLine("Class={0}, Value={1}", objs[i].GetType().FullName, objs[i].ToString());
             }
 
+            schema = ComplexClass.SCHEMA;
+            ComplexClass z= ComplexClass.Populate();
+            r=ReflectReader.protocol<ComplexClass>(schema, z);
+            Console.WriteLine(((ComplexClass)r).myString);
 
-            schema = @"{
-                ""protocol"" : ""MyProtocol"",
-                ""namespace"" : ""com.foo"",
-                ""types"" :
-                [
-                    {
-                        ""type"" : ""record"",
-                        ""name"" : ""A"",
-                        ""fields"" : [ { ""name"" : ""f1"", ""type"" : ""long"" } ]
-                    },
-                    {
-                        ""type"" : ""enum"",
-                        ""name"" : ""MyEnum"",
-                        ""symbols"" : [ ""A"", ""B"", ""C"" ]
-                    },
-                    {
-                        ""type"": ""fixed"",
-                        ""size"": 16,
-                        ""name"": ""MyFixed""
-                    },
-                    {
-                        ""type"" : ""record"",
-                        ""name"" : ""Z"",
-                        ""fields"" :
-                        [
-                            { ""name"" : ""myUInt"", ""type"" : [ ""int"", ""null"" ] },
-                            { ""name"" : ""myULong"", ""type"" : [ ""long"", ""null"" ] },
-                            { ""name"" : ""myUBool"", ""type"" : [ ""boolean"", ""null"" ] },
-                            { ""name"" : ""myUDouble"", ""type"" : [ ""double"", ""null"" ] },
-                            { ""name"" : ""myUFloat"", ""type"" : [ ""float"", ""null"" ] },
-                            { ""name"" : ""myUBytes"", ""type"" : [ ""bytes"", ""null"" ] },
-                            { ""name"" : ""myUString"", ""type"" : [ ""string"", ""null"" ] },
-                            { ""name"" : ""myInt"", ""type"" : ""int"" },
-                            { ""name"" : ""myLong"", ""type"" : ""long"" },
-                            { ""name"" : ""myBool"", ""type"" : ""boolean"" },
-                            { ""name"" : ""myDouble"", ""type"" : ""double"" },
-                            { ""name"" : ""myFloat"", ""type"" : ""float"" },
-                            { ""name"" : ""myBytes"", ""type"" : ""bytes"" },
-                            { ""name"" : ""myString"", ""type"" : ""string"" },
-                            { ""name"" : ""myNull"", ""type"" : ""null"" },
-                            { ""name"" : ""myFixed"", ""type"" : ""MyFixed"" },
-                            { ""name"" : ""myA"", ""type"" : ""A"" },
-                            { ""name"" : ""myNullableA"", ""type"" : [ ""null"", ""A"" ] },
-                            { ""name"" : ""myE"", ""type"" : ""MyEnum"" },
-                            { ""name"" : ""myArray"", ""type"" : { ""type"" : ""array"", ""items"" : ""bytes"" } },
-                            { ""name"" : ""myArray2"", ""type"" : { ""type"" : ""array"", ""items"" : { ""type"" : ""record"", ""name"" : ""newRec"", ""fields"" : [ { ""name"" : ""f1"", ""type"" : ""long""} ] } } },
-                            { ""name"" : ""myMap"", ""type"" : { ""type"" : ""map"", ""values"" : ""string"" } },
-                            { ""name"" : ""myMap2"", ""type"" : { ""type"" : ""map"", ""values"" : ""newRec"" } },
-                            { ""name"" : ""myObject"", ""type"" : [ ""MyEnum"", ""A"", ""null"" ] },
-                            { ""name"" : ""myArray3"", ""type"" : { ""type"" : ""array"", ""items"" : { ""type"" : ""array"", ""items"" : [ ""double"", ""string"", ""null"" ] } } }
-                        ]
-                    }
-                ]
-            }";
-
-            Z z= Z.Populate();
-            r=ReflectReader.test<Z>(schema, z);
-            Console.WriteLine(((Z)r).myString);
-        /*
             SimpleClass s= SimpleClass.Populate();
             schema=SimpleClass.SCHEMA;
-            Console.WriteLine(schema);
 
-            r=ReflectReader.test<SimpleClass>(schema, s);
+            r=ReflectReader.schema<SimpleClass>(schema, s);
             Console.WriteLine(((SimpleClass)r).myString);
-        */
 
         }
     }
