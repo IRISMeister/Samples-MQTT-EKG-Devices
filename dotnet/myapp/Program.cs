@@ -15,7 +15,7 @@ using Avro;
 using Avro.IO;
 using Avro.Generic;
 
-namespace adonet
+namespace dc
 {
     class Program
     {
@@ -117,11 +117,6 @@ namespace adonet
             IRISObject input = my.DoSomethingNative("MyTopic", "MyData");
             IRISObject input2 = my.DoSomethingSQL("MyTopic", "MyData");
 
-            /*
-             * general AVRO tests
-             */ 
-            AVROTest();
-
             Console.WriteLine("Hit any key");
             Console.ReadLine();
 
@@ -140,50 +135,6 @@ namespace adonet
             list3.Add(new dc.MyLibrary());
         }
 
-        static void AVROTest() {
-            string schema;
-            Object[] objs;
-
-            schema = "[{\"type\": \"array\", \"items\": \"string\"}, \"string\"]";
-            object value = new string[] { "aaa", "bbb" };
-            var r=GenericReader.test<object>(schema, value);
-            objs = (Object[])r;
-            Console.WriteLine(objs.Length);
-            for (int i = 0; i < objs.Length; i++)
-            {
-                Console.WriteLine("Class={0}, Value={1}", objs[i].GetType().FullName, objs[i].ToString());
-            }
-
-            schema = "[{\"type\": \"array\", \"items\": \"float\"}, \"double\"]";
-            object fvalue = new float[] { 23.67f, 22.78f };
-            r=GenericReader.test<object>(schema, fvalue);
-            objs = (Object[])r;
-            for (int i = 0; i < objs.Length; i++)
-            {
-                Console.WriteLine("Class={0}, Value={1}", objs[i].GetType().FullName, objs[i].ToString());
-            }
-
-            schema = "[{\"type\": \"array\", \"items\": \"int\"}, \"int\"]";
-            object intvalue = new int[] { 1,2,3,4,5 };
-            r = GenericReader.test<object>(schema, intvalue);
-            objs = (Object[])r;
-            for (int i = 0; i < objs.Length; i++)
-            {
-                Console.WriteLine("Class={0}, Value={1}", objs[i].GetType().FullName, objs[i].ToString());
-            }
-
-            schema = ComplexClass.SCHEMA;
-            ComplexClass z= ComplexClass.Populate();
-            r=ReflectReader.protocol<ComplexClass>(schema, z);
-            Console.WriteLine(((ComplexClass)r).myString);
-
-            SimpleClass s= SimpleClass.Populate();
-            schema=SimpleClass.SCHEMA;
-
-            r=ReflectReader.schema<SimpleClass>(schema, s);
-            Console.WriteLine(((SimpleClass)r).myString);
-
-        }
     }
 
 

@@ -25,6 +25,8 @@ using Avro.Generic;
 using Avro.Specific;
 using Avro.Reflect;
 
+namespace dc
+{
     public class ReflectReader
     {
     
@@ -35,7 +37,7 @@ using Avro.Reflect;
         serializeByProtocol<T>(s, value, out stream, out ws);
 
         // save to a file.
-        string path = "Reflect.avro";
+        string path = "ComplexClass.avro";
         FileStream fs = new FileStream(
             path, FileMode.Create, FileAccess.Write);
         stream.CopyTo(fs);
@@ -117,3 +119,4 @@ using Avro.Reflect;
     }
     
     }
+}

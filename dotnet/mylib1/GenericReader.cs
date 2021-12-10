@@ -5,6 +5,8 @@ using Avro.IO;
 using System.Collections.Generic;
 using Avro.Generic;
 
+namespace dc
+{
 public class GenericReader
 {
 	public GenericReader()
@@ -76,4 +78,5 @@ public class GenericReader
 
     }
 
+}
 }

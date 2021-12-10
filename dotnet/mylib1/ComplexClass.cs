@@ -19,7 +19,8 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
-
+namespace dc
+{
 public enum MyEnum
 {
     A,
@@ -40,7 +41,7 @@ public class ComplexClass
 
     public static string SCHEMA = @"{
         ""protocol"" : ""MyProtocol"",
-        ""namespace"" : ""com.foo"",
+        ""namespace"" : ""foo"",
         ""types"" :
         [
             {
@@ -162,7 +163,7 @@ public class ComplexClass
             myDouble = 3.14,
             myFloat = (float)1.59E-2,
             myBytes = new byte[3] { 0x01, 0x02, 0x03 },
-            myString = "def",
+            myString = "this is a ComplexClass",
             myNull = null,
             myFixed = new byte[16] { 0x01, 0x02, 0x03, 0x04, 0x01, 0x02, 0x03, 0x04, 0x01, 0x02, 0x03, 0x04, 0x01, 0x02, 0x03, 0x04 },
             myA = new A() { f1 = 3L },
@@ -184,4 +185,5 @@ public class ComplexClass
         return z;
     } 
 
+}
 }

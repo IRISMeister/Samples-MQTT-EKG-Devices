@@ -20,6 +20,8 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 
+namespace dc
+{
 public class SimpleClass
 {
     public static string SCHEMA = @"{""protocol"" : ""MyProtocol"",""type"":""record"",""name"":""SimpleClass"",""namespace"":""foo"",""fields"":[{""name"":""myUInt"",""type"":[""int"",""null""]},{""name"":""myULong"",""type"":[""long"",""null""]},{""name"":""myUBool"",""type"":[""boolean"",""null""]},{""name"":""myUDouble"",""type"":[""double"",""null""]},{""name"":""myUFloat"",""type"":[""float"",""null""]},{""name"":""myUBytes"",""type"":[""bytes"",""null""]},{""name"":""myUString"",""type"":[""string"",""null""]},{""name"":""myInt"",""type"":""int""},{""name"":""myLong"",""type"":""long""},{""name"":""myBool"",""type"":""boolean""},{""name"":""myDouble"",""type"":""double""},{""name"":""myFloat"",""type"":""float""},{""name"":""myBytes"",""type"":""bytes""},{""name"":""myString"",""type"":""string""},{""name"":""myNull"",""type"":""null""},{""name"":""myArray"",""type"":{""type"":""array"",""items"":""bytes""}},{""name"":""myMap"",""type"":{""type"":""map"",""values"":""string""}},{""name"":""myArray3"",""type"":{""type"":""array"",""items"":{""type"":""array"",""items"":[""double"",""string"",""null""]}}}]}";
@@ -79,7 +81,7 @@ public class SimpleClass
             myDouble = 3.14,
             myFloat = (float)1.59E-2,
             myBytes = new byte[3] { 0x01, 0x02, 0x03 },
-            myString = "def",
+            myString = "this is a SimpleClass",
             myNull = null,
             myArray = new List<byte[]>() { new byte[] { 0x01, 0x02, 0x03, 0x04 } },
             myMap = new Dictionary<string, string>()
@@ -91,4 +93,5 @@ public class SimpleClass
         };
         return z;
     }        
+}
 }
