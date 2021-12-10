@@ -44,17 +44,45 @@ namespace adonet
                 // may garble your console...
                 //Console.WriteLine((new System.IO.StreamReader(myms)).ReadToEnd());
 
+                string path = "/share/SimpleClass.avsc";
+                FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
+                var reader = new StreamReader(fs, Encoding.UTF8);
+                string schema = reader.ReadToEnd();
+                fs.Close();
+
+                Schema rs;
+                Schema ws;
+                rs = Schema.Parse(schema); //c# cannot parse from a File.
+                ws = Schema.Parse(schema);
+                myms.Position = 0;
+
+                SimpleClass s=ReflectReader.deserialize<SimpleClass>(myms,ws,rs);
+
+                Console.WriteLine("Received ToString():"+s.ToString());
+                Console.WriteLine("Received GetType():"+s.GetType());
+
+                Console.WriteLine("Values read from EnsLib.MQTT.Message.");
+                Console.WriteLine("myString:{0} ", s.myString);
+                Console.Write("myBytes: ");
+                for (int i = 0; i < s.myBytes.Length; i++)
+                {
+                    Console.Write("[{0}] ", s.myBytes[i].ToString());
+                }                
+                
+                Console.WriteLine(" ");
+/*
+                // use GenericReader to decode very simple array of integers
                 string path = "/share/BinaryEncoder.avsc";
                 FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
                 var reader = new StreamReader(fs, Encoding.UTF8);
                 //string schema="{\"type\": \"array\", \"items\": \"int\"}";
-                string schema = reader.ReadLine();
+                string schema = reader.ReadToEnd();
                 fs.Close();
                 Console.WriteLine(schema);
 
                 Schema rs;
                 Schema ws;
-                rs = Schema.Parse(schema);
+                rs = Schema.Parse(schema); //c# cannot parse from a File.
                 ws = Schema.Parse(schema);
                 myms.Position = 0;
                 GenericReader<object> r = new GenericReader<object>(ws, rs);
@@ -73,6 +101,7 @@ namespace adonet
                     Console.Write("{0} ", objs[i].ToString());
                 }
                 Console.WriteLine(" ");
+*/
 
             }
             catch (Exception e) {

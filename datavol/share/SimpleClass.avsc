@@ -1,7 +1,7 @@
 {
    "namespace" : "foo",
    "type" : "record",
-   "name" : "Z",
+   "name" : "SimpleClass",
    "fields" :
    [
          { "name" : "myUInt", "type" : [ "int", "null" ] },

@@ -142,7 +142,7 @@ root@aa9e6466578e:/source# dotnet /app/myapp.dll
 
 avro schemaからC#クラスを作成。(dotnet31-dev使用時のみ)
 ```
-root@aa9e6466578e:~#. dotnet/tools/avrogen -s /share/Reflect.avsc ./gen --namespace foo:foo
+root@aa9e6466578e:~#. dotnet/tools/avrogen -s /share/SimpleClass.avsc ./gen --namespace foo:foo
 ```
 
 ## 参考にしたコードサンプル

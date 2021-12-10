@@ -66,7 +66,7 @@ using Avro.Reflect;
         return output;
     }
 
-    private static void serializeBySchema<T>(string writerSchema, T actual, out Stream stream, out Avro.Schema ws)
+    public static void serializeBySchema<T>(string writerSchema, T actual, out Stream stream, out Avro.Schema ws)
     {
 
         ws = Schema.Parse(writerSchema);
@@ -82,7 +82,7 @@ using Avro.Reflect;
         stream = ms;
     }
 
-    private static void serializeByProtocol<T>(string writerSchema, T actual, out Stream stream, out Avro.Schema ws)
+    public static void serializeByProtocol<T>(string writerSchema, T actual, out Stream stream, out Avro.Schema ws)
     {
 
         Protocol protocol = Protocol.Parse(writerSchema);
@@ -106,7 +106,7 @@ using Avro.Reflect;
         stream = ms;
     }
 
-    private static S deserialize<S>(Stream ms, Avro.Schema ws, Avro.Schema rs)
+    public static S deserialize<S>(Stream ms, Avro.Schema ws, Avro.Schema rs)
     {
         //S deserialized = null;
         long initialPos = ms.Position;
