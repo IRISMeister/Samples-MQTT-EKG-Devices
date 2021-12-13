@@ -24,7 +24,7 @@ namespace dc
 {
 public class SimpleClass
 {
-    public static string SCHEMA = @"{""protocol"" : ""MyProtocol"",""type"":""record"",""name"":""SimpleClass"",""namespace"":""foo"",""fields"":[{""name"":""myUInt"",""type"":[""int"",""null""]},{""name"":""myULong"",""type"":[""long"",""null""]},{""name"":""myUBool"",""type"":[""boolean"",""null""]},{""name"":""myUDouble"",""type"":[""double"",""null""]},{""name"":""myUFloat"",""type"":[""float"",""null""]},{""name"":""myUBytes"",""type"":[""bytes"",""null""]},{""name"":""myUString"",""type"":[""string"",""null""]},{""name"":""myInt"",""type"":""int""},{""name"":""myLong"",""type"":""long""},{""name"":""myBool"",""type"":""boolean""},{""name"":""myDouble"",""type"":""double""},{""name"":""myFloat"",""type"":""float""},{""name"":""myBytes"",""type"":""bytes""},{""name"":""myString"",""type"":""string""},{""name"":""myNull"",""type"":""null""},{""name"":""myArray"",""type"":{""type"":""array"",""items"":""bytes""}},{""name"":""myMap"",""type"":{""type"":""map"",""values"":""string""}},{""name"":""myArray3"",""type"":{""type"":""array"",""items"":{""type"":""array"",""items"":[""double"",""string"",""null""]}}}]}";
+   public static string SCHEMA = @"{""protocol"" : ""MyProtocol"",""type"":""record"",""name"":""SimpleClass"",""namespace"":""foo"",""fields"":[{""name"":""myUInt"",""type"":[""int"",""null""]},{""name"":""myULong"",""type"":[""long"",""null""]},{""name"":""myUBool"",""type"":[""boolean"",""null""]},{""name"":""myUDouble"",""type"":[""double"",""null""]},{""name"":""myUFloat"",""type"":[""float"",""null""]},{""name"":""myUBytes"",""type"":[""bytes"",""null""]},{""name"":""myUString"",""type"":[""string"",""null""]},{""name"":""myInt"",""type"":""int""},{""name"":""myLong"",""type"":""long""},{""name"":""myBool"",""type"":""boolean""},{""name"":""myDouble"",""type"":""double""},{""name"":""myFloat"",""type"":""float""},{""name"":""myBytes"",""type"":""bytes""},{""name"":""myString"",""type"":""string""},{""name"":""myArray"",""type"":{""type"":""array"",""items"":""bytes""}},{""name"":""myMap"",""type"":{""type"":""map"",""values"":""string""}}]}";
 
     public int? myUInt { get; set; }
 
@@ -54,15 +54,9 @@ public class SimpleClass
 
     public string myString { get; set; }
 
-    public object myNull { get; set; }
-
     public List<byte[]> myArray { get; set; }
 
     public Dictionary<string, string> myMap { get; set; }
-
-    public object myObject { get; set; }
-
-    public List<List<object>> myArray3 { get; set; }
 
     public static SimpleClass Populate()
     {
@@ -82,14 +76,11 @@ public class SimpleClass
             myFloat = (float)1.59E-2,
             myBytes = new byte[3] { 0x01, 0x02, 0x03 },
             myString = "this is a SimpleClass",
-            myNull = null,
             myArray = new List<byte[]>() { new byte[] { 0x01, 0x02, 0x03, 0x04 } },
             myMap = new Dictionary<string, string>()
             {
                 ["abc"] = "123"
-            },
-            myObject = new A() { f1 = 6L },
-            myArray3 = new List<List<object>>() { new List<object>() { 7.0, "def" } }
+            }
         };
         return z;
     }        

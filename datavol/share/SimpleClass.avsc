@@ -18,9 +18,7 @@
          { "name" : "myFloat", "type" : "float" },
          { "name" : "myBytes", "type" : "bytes" },
          { "name" : "myString", "type" : "string" },
-         { "name" : "myNull", "type" : "null" },
          { "name" : "myArray", "type" : { "type" : "array", "items" : "bytes" } },
-         { "name" : "myMap", "type" : { "type" : "map", "values" : "string" } },
-         { "name" : "myArray3", "type" : { "type" : "array", "items" : { "type" : "array", "items" : [ "double", "string", "null" ] } } }
+         { "name" : "myMap", "type" : { "type" : "map", "values" : "string" } }
    ]
 }
