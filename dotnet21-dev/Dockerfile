@@ -6,5 +6,5 @@ ENV GWLIBDIR lib
 ENV ISC_LIBDIR ${ISC_PACKAGE_INSTALLDIR}/dev/dotnet/bin/Core21
 
 WORKDIR /source
-COPY --from=store/intersystems/iris-community:2020.4.0.547.0 $ISC_LIBDIR/*.nupkg $GWLIBDIR/
+COPY --from=store/intersystems/iris-community:2021.2.0.617.0 $ISC_LIBDIR/*.nupkg $GWLIBDIR/
 COPY build.sh .
