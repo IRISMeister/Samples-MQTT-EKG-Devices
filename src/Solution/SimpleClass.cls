@@ -5,18 +5,35 @@ Property topic As %String;
 
 Property seq As %BigInt;
 
-// It's may not a good idea to use generated class as a member.
-Property SimpleClass As dc.SimpleClass;
+Property myInt As %Library.Integer;
 
-Index idxseq on seq;
+Property myLong As %Library.BigInt;
+
+Property myBool As %Library.Boolean;
+
+Property myDouble As %Library.Double;
+
+Property myFloat As %Library.Float;
+
+Property myBytes As %Library.RawString;
+
+Property myString As %Library.String;
+
+Property myArray As list Of %Library.RawString(STORAGEDEFAULT = "list");
+
+Property myMap As array Of %Library.String(STORAGEDEFAULT = "list");
+
+Index idxseq On seq;
 
 Method %OnNew(topic As %String, seq As %BigInt) As %Status [ Private, ServerOnly = 1 ]
 {
     Set ..topic=topic
     Set ..seq=seq
-    &SQL(select ID into :id from dc.SimpleClass where "<myLong>k__BackingField"=:seq)
-    Set ..SimpleClass=##class(dc.SimpleClass).%OpenId(id)
     Return $$$OK
+}
+ClassMethod GETNEWID() As %Integer
+{
+    Quit $INCREMENT(^SIMPLECLASSUNIQ)
 }
 
 }

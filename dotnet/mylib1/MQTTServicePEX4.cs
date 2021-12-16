@@ -48,7 +48,7 @@ namespace dc
             dc.MyLibrary mylib = new dc.MyLibrary();
             mylib.XEP("dc.SimpleClass", simple);
 
-            IRISObject newrequest = (IRISObject)iris.ClassMethodObject("Solution.SimpleClass", "%New", topic,seqno);
+            IRISObject newrequest = (IRISObject)iris.ClassMethodObject("Solution.SimpleClassC", "%New", topic,seqno);
             
             // Iterate through target business components and send request message
             string[] targetNames = TargetConfigNames.Split(',');
