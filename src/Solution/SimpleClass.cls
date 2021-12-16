@@ -14,7 +14,7 @@ Method %OnNew(topic As %String, seq As %BigInt) As %Status [ Private, ServerOnly
 {
     Set ..topic=topic
     Set ..seq=seq
-    &SQL(select ID into :id from dc.SimpleClass where "<myULong>k__BackingField"=:seq)
+    &SQL(select ID into :id from dc.SimpleClass where "<myLong>k__BackingField"=:seq)
     Set ..SimpleClass=##class(dc.SimpleClass).%OpenId(id)
     Return $$$OK
 }

@@ -4,13 +4,6 @@
    "name" : "SimpleClass",
    "fields" :
    [
-         { "name" : "myUInt", "type" : [ "int", "null" ] },
-         { "name" : "myULong", "type" : [ "long", "null" ] },
-         { "name" : "myUBool", "type" : [ "boolean", "null" ] },
-         { "name" : "myUDouble", "type" : [ "double", "null" ] },
-         { "name" : "myUFloat", "type" : [ "float", "null" ] },
-         { "name" : "myUBytes", "type" : [ "bytes", "null" ] },
-         { "name" : "myUString", "type" : [ "string", "null" ] },
          { "name" : "myInt", "type" : "int" },
          { "name" : "myLong", "type" : "long" },
          { "name" : "myBool", "type" : "boolean" },

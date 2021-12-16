@@ -25,24 +25,10 @@ using IndexType = InterSystems.XEP.Attributes.IndexType;
 
 namespace dc
 {
-[Index(name = "idx1", fields = new string[] { "<myULong>k__BackingField" }, type = IndexType.simple)]
+[Index(name = "idx1", fields = new string[] { "<myLong>k__BackingField" }, type = IndexType.simple)]
 public class SimpleClass
 {
-   public static string SCHEMA = @"{""protocol"" : ""MyProtocol"",""type"":""record"",""name"":""SimpleClass"",""namespace"":""foo"",""fields"":[{""name"":""myUInt"",""type"":[""int"",""null""]},{""name"":""myULong"",""type"":[""long"",""null""]},{""name"":""myUBool"",""type"":[""boolean"",""null""]},{""name"":""myUDouble"",""type"":[""double"",""null""]},{""name"":""myUFloat"",""type"":[""float"",""null""]},{""name"":""myUBytes"",""type"":[""bytes"",""null""]},{""name"":""myUString"",""type"":[""string"",""null""]},{""name"":""myInt"",""type"":""int""},{""name"":""myLong"",""type"":""long""},{""name"":""myBool"",""type"":""boolean""},{""name"":""myDouble"",""type"":""double""},{""name"":""myFloat"",""type"":""float""},{""name"":""myBytes"",""type"":""bytes""},{""name"":""myString"",""type"":""string""},{""name"":""myArray"",""type"":{""type"":""array"",""items"":""bytes""}},{""name"":""myMap"",""type"":{""type"":""map"",""values"":""string""}}]}";
-
-    public int? myUInt { get; set; }
-
-    public long myULong { get; set; }
-
-    public bool? myUBool { get; set; }
-
-    public double? myUDouble { get; set; }
-
-    public float? myUFloat { get; set; }
-
-    public byte[] myUBytes { get; set; }
-
-    public string myUString { get; set; }
+   public static string SCHEMA = @"{""protocol"" : ""MyProtocol"",""type"":""record"",""name"":""SimpleClass"",""namespace"":""foo"",""fields"":[{""name"":""myInt"",""type"":""int""},{""name"":""myLong"",""type"":""long""},{""name"":""myBool"",""type"":""boolean""},{""name"":""myDouble"",""type"":""double""},{""name"":""myFloat"",""type"":""float""},{""name"":""myBytes"",""type"":""bytes""},{""name"":""myString"",""type"":""string""},{""name"":""myArray"",""type"":{""type"":""array"",""items"":""bytes""}},{""name"":""myMap"",""type"":{""type"":""map"",""values"":""string""}}]}";
 
     public int myInt { get; set; }
 
@@ -66,13 +52,6 @@ public class SimpleClass
     {
         SimpleClass z = new SimpleClass()
         {
-            myUInt = 1,
-            myULong = 2L,
-            myUBool = true,
-            myUDouble = 3.14,
-            myUFloat = (float)1.59E-3,
-            myUBytes = new byte[3] { 0x01, 0x02, 0x03 },
-            myUString = "abc",
             myInt = 1,
             myLong = 2L,
             myBool = true,

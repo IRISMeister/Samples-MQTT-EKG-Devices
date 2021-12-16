@@ -41,8 +41,8 @@ namespace dc
             // Can't send XEP(dotnet) class as is.  So we need to create a simple message class via Native API to hold it.
             IRIS iris = GatewayContext.GetIRIS();
             // Save decoded values into IRIS via Native API
-            // Use myULong as an unique key. 
-            seqno = simple.myULong;
+            // Use myLong as an unique key. 
+            seqno = simple.myLong;
 
             // Save decoded values into IRIS via XEP
             dc.MyLibrary mylib = new dc.MyLibrary();

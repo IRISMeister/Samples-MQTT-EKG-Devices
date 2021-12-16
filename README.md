@@ -219,7 +219,7 @@ Property "<myUInt>k__BackingField" As %Library.Integer;
 ```
 index定義の際は、この名称を使用する必要がある。また、SQLでのカラム値が冗長になる、メッセービューワで閲覧すると(XMLなので)<>内が表示されないという負の副作用を持つ。
 ```
-[Index(name = "idx1", fields = new string[] { "<myULong>k__BackingField" }, type = IndexType.simple)]
+[Index(name = "idx1", fields = new string[] { "<myLong>k__BackingField" }, type = IndexType.simple)]
 
 ```
 別途、器となるクラスを用意して中身をCOPYしたほうが、健全かもしれない。  
