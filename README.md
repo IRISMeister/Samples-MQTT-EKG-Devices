@@ -206,3 +206,29 @@ total 2072
 ```
 
 
+## その他
+
+### XEP
+AVROのReflectReaderで期待されるc#クラスはset/getが必要な模様。無いと'Class SimpleClass doesnt contain property XXX'、というエラーになる。
+```c#
+    public int? myUInt { get; set; }
+```
+XEPはこのシンタックスを理解しない。具体的にはImportSchema()時のObjectScript側のクラスはこのような定義となる。
+```ObjectScript
+Property "<myUInt>k__BackingField" As %Library.Integer;
+```
+index定義の際は、この名称を使用する必要がある。また、SQLでのカラム値が冗長になる、メッセービューワで閲覧すると(XMLなので)<>内が表示されないという負の副作用を持つ。
+```
+[Index(name = "idx1", fields = new string[] { "<myULong>k__BackingField" }, type = IndexType.simple)]
+
+```
+別途、器となるクラスを用意して中身をCOPYしたほうが、健全かもしれない。  
+
+### スキーマの変更への追随
+XEPに限らないが、メッセージになるクラス(src/Solution/SimpleClass.cls)をコンパイルする際には、IRIS側のクラス(src/dc/SimpleClass.cls)が必要になる。そのため、既存メッセージが変更されたり、新しいメッセージが追加される際には、下記を動的に行う仕組みが必要となる。
+- AVRO Schemaの変更を検知
+- (Reflect用の) c# クラスの作成/変更
+- 同c#クラスに対してのImportSchema()実行->IRIS側のクラス作成
+- メッセージになるクラスの作成
+
+

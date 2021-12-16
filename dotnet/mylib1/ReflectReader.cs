@@ -108,7 +108,18 @@ namespace dc
         stream = ms;
     }
 
-    public static S deserialize<S>(Stream ms, Avro.Schema ws, Avro.Schema rs)
+
+        public static S get<S>(Stream ms, string writerSchema)
+        {
+            Avro.Schema ws = Schema.Parse(writerSchema);
+
+            ReflectReader<S> r = new ReflectReader<S>(ws, ws);
+            Decoder d = new BinaryDecoder(ms);
+            return r.Read(default(S), new BinaryDecoder(ms));
+        }
+        
+        
+        public static S deserialize<S>(Stream ms, Avro.Schema ws, Avro.Schema rs)
     {
         //S deserialized = null;
         long initialPos = ms.Position;
