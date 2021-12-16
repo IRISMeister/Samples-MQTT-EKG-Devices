@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using InterSystems.Data.IRISClient.Gateway;
 using InterSystems.Data.IRISClient.ADO;
 
@@ -25,24 +26,31 @@ namespace dc
             String topic = req.GetString("Topic");
             LOGINFO("Received topic: " + topic);
 
-            // Decode value (raw data) into rows. It depends on how they are encoded.
-            //
             // ++Write your code here++
-            int elementcount = 2000;
+            // Decode AVRO
+            byte[] b = req.GetBytes("StringValue");
+            MemoryStream ms = new MemoryStream();
+            ms.Write(b, 0, b.Length);
+            ms.Position = 0;
 
-            int[] array = new int[elementcount];
-            for (int i = 0; i < elementcount; i++)
-            {
-                array[i] = i;
+            string schema;
+            schema=dc.SimpleClass.SCHEMA;
+            
+            var r=dc.ReflectReader.get<dc.SimpleClass>(ms,schema);
+            dc.SimpleClass simple = (dc.SimpleClass)r;
+
+            IRISList myarray = new IRISList();
+            for (int j = 0; j < simple.myArray.Count; j++) {
+                myarray.Add(String.Join(",",simple.myArray[j]));
             }
             // --Write your code here--
 
             IRIS iris = GatewayContext.GetIRIS();
 
             // Save decoded values into IRIS via Native API
-            seqno = (long)iris.ClassMethodLong("Solution.MQTTDATA", "GETNEWID");
+            seqno = (long)iris.ClassMethodLong("Solution.SimpleClass", "GETNEWID");
             // Pass an array as a comma separated String value.
-            IRISObject newrequest = (IRISObject)iris.ClassMethodObject("Solution.MQTTDATA", "%New", topic,seqno,String.Join(",",array));
+            IRISObject newrequest = (IRISObject)iris.ClassMethodObject("Solution.SimpleClass", "%New", topic,seqno,simple.myInt,simple.myLong,simple.myBool,simple.myDouble,simple.myFloat,String.Join(",",simple.myBytes),simple.myString,myarray);
 
             // Iterate through target business components and send request message
             string[] targetNames = TargetConfigNames.Split(',');
