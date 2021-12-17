@@ -92,15 +92,17 @@ $
 
 ## PEXを使わずに.NETを呼び出す方法
 ```
-$ docker-compose exec iris iris session iris
-USER>w $SYSTEM.external.getRemoteGateway("netgw",55556).new("System.DateTime",0).Now
+$ docker-compose exec iris iris session iris -U INTEROP
+INTEROP>w $SYSTEM.external.getRemoteGateway("netgw",55556).new("System.DateTime",0).Now
 2021-11-19 03:51:03.4967784
 
-USER>Set gw=$SYSTEM.external.getRemoteGateway("netgw",55556)
-USER>do gw.addToPath("/app/MyLibrary.dll")
-USER>set proxy = gw.new("dc.MyLibrary")
-USER>w proxy.GetNumber()
+INTEROP>Set gw=$SYSTEM.external.getRemoteGateway("netgw",55556)
+INTEROP>do gw.addToPath("/app/MyLibrary.dll")
+INTEROP>set proxy = gw.new("dc.MyLibrary")
+INTEROP>w proxy.GetNumber()
 123
+INTEROP>d proxy.XEPImport("dc.SimpleClass")
+INTEROP>
 ```
 Windows(非コンテナ環境)の場合も同様。事前にExternal Language Serverの%DotNet Serverを起動しておくこと。  
 [SMP][システム管理][構成][接続性][External Language Servers]

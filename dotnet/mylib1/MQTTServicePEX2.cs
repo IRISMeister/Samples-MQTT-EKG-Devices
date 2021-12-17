@@ -15,7 +15,6 @@ namespace dc
         {
             long seqno;
 
-            LOGINFO("Message Received");
             IRISObject req = (IRISObject)request;
             LOGINFO("Received object: " + req.InvokeString("%ClassName", 1));
 

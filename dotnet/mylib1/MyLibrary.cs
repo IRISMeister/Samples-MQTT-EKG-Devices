@@ -183,6 +183,21 @@ namespace dc
             return request;
         }
 
+        public void XEPImport(string classFullName)
+        {
+            EventPersister xepPersister = PersisterFactory.CreatePersister();
+
+            String host = "iris";
+            int port = 1972;
+            String username = "SuperUser";
+            String password = "SYS";
+            String Namespace = "INTEROP";
+            xepPersister.Connect(host, port, Namespace, username, password); 
+
+            xepPersister.ImportSchema(classFullName);   // import flat schema
+            xepPersister.Close();
+            
+        }   
         public void XEP(string classFullName, dc.SimpleClass e)
         {
             EventPersister xepPersister = PersisterFactory.CreatePersister();
@@ -194,11 +209,12 @@ namespace dc
             String Namespace = "INTEROP";
             xepPersister.Connect(host, port, Namespace, username, password); 
 
-            // Don't do this here.
+            // It's not a good idea at all.
             xepPersister.ImportSchema(classFullName);   // import flat schema
-
             Event xepEvent = xepPersister.GetEvent(classFullName, Event.INDEX_MODE_SYNC);
             xepEvent.Store(e);
+            xepEvent.Close();
+            xepPersister.Close();
             
         }        
     }

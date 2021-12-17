@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Collections.Generic;
 using InterSystems.Data.IRISClient.Gateway;
 using InterSystems.Data.IRISClient.ADO;
 
@@ -16,7 +17,6 @@ namespace dc
         {
             long seqno;
 
-            LOGINFO("Message Received");
             IRISObject req = (IRISObject)request;
             LOGINFO("Received object: " + req.InvokeString("%ClassName", 1));
 
@@ -35,28 +35,38 @@ namespace dc
             string schema;
             schema=dc.SimpleClass.SCHEMA;
             
-            var r=dc.ReflectReader.get<dc.SimpleClass>(ms,schema);
-            dc.SimpleClass simple = (dc.SimpleClass)r;
+            // Add all record(s) into a list
+            var items = new List<dc.SimpleClass>();
+            dc.SimpleClass s;
+
+            // Repeat it until ms depleted.
+            do {
+                s = (dc.SimpleClass)dc.ReflectReader.get<dc.SimpleClass>(ms,schema);
+                items.Add(s);
+            }
+            while (ms.Position<ms.Length);
 
             // Can't send XEP(dotnet) class as is.  So we need to create a simple message class via Native API to hold it.
             IRIS iris = GatewayContext.GetIRIS();
-            // Save decoded values into IRIS via Native API
-            // Use myLong as an unique key. 
-            seqno = simple.myLong;
-
-            // Save decoded values into IRIS via XEP
+            IRISObject newrequest;
             dc.MyLibrary mylib = new dc.MyLibrary();
-            mylib.XEP("dc.SimpleClass", simple);
-
-            IRISObject newrequest = (IRISObject)iris.ClassMethodObject("Solution.SimpleClassC", "%New", topic,seqno);
-            
-            // Iterate through target business components and send request message
-            string[] targetNames = TargetConfigNames.Split(',');
-            foreach (string name in targetNames)
+            foreach (dc.SimpleClass simple in items)
             {
-                SendRequestAsync(name, newrequest);
-                LOGINFO("Target:" + name);
+                // Save decoded data into IRIS via XEP
+                mylib.XEP("dc.SimpleClass", simple);
 
+                // Use myLong as an unique key. 
+                seqno = simple.myLong;
+                // Save a container message into IRIS via Native API
+                newrequest = (IRISObject)iris.ClassMethodObject("Solution.SimpleClassC", "%New", topic,seqno);
+                
+                // Iterate through target business components and send request message
+                string[] targetNames = TargetConfigNames.Split(',');
+                foreach (string name in targetNames)
+                {
+                    SendRequestAsync(name, newrequest);
+                    LOGINFO("Target:" + name);
+                }
             }
             return null;
         }

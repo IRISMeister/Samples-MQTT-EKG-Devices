@@ -4,11 +4,13 @@ import avro.io
 
 schema = avro.schema.Parse(open("SimpleClass.avsc", "rb").read())
 
-data = {'myInt': 1, 'myLong': 2, 'myBool': True, 'myDouble': 3.14, 'myFloat': 0.01590000092983246, 'myBytes': b'\x01\x02\x03', 'myString': 'this is a SimpleClass', 'myArray': [b'\x01\x02\x03\x04'], 'myMap': {'abc': '123'}}
 
 writer = avro.io.DatumWriter(schema)
 bytes_writer = io.BytesIO()
 encoder = avro.io.BinaryEncoder(bytes_writer)
+data = {'myInt': 1, 'myLong': 2, 'myBool': True, 'myDouble': 3.14, 'myFloat': 0.01590000092983246, 'myBytes': b'\x01\x02\x03', 'myString': 'this is a 1st SimpleClass', 'myArray': [b'\x01\x02\x03\x04'], 'myMap': {'abc': '123'}}
+writer.write(data,encoder)
+data = {'myInt': 10, 'myLong': 3, 'myBool': True, 'myDouble': 3.14, 'myFloat': 0.01590000092983246, 'myBytes': b'\x04\x05\x06', 'myString': 'this is a 2nd SimpleClass', 'myArray': [b'\x01\x02\x03\x04'], 'myMap': {'abc': '123'}}
 writer.write(data,encoder)
 
 raw_bytes = bytes_writer.getvalue()
