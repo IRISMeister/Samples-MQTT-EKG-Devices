@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Collections.Generic;
 using InterSystems.Data.IRISClient.Gateway;
 using InterSystems.Data.IRISClient.ADO;
 
@@ -24,42 +26,51 @@ namespace dc
             String topic = req.GetString("Topic");
             LOGINFO("Received topic: " + topic);
 
-            // Decode value (raw data) into rows. It depends on how they are encoded.
-            //
-            // ++Write your code here++
-            int elementcount = 2000;
-            int columncount = 4;
+            // Decode AVRO
+            byte[] b = req.GetBytes("StringValue");
+            MemoryStream ms = new MemoryStream();
+            ms.Write(b, 0, b.Length);
+            ms.Position = 0;
 
-            int[] array = new int[elementcount];
-            for (int i = 0; i < elementcount; i++)
-            {
-                array[i] = i;
-            }
-            // --Write your code here--
+            string schema;
+            schema=dc.SimpleClass.SCHEMA;
+            
+            // Add all record(s) into a list
+            var items = new List<dc.SimpleClass>();
 
+            // Repeat it until ms depleted.
+            do { items.Add((dc.SimpleClass)dc.ReflectReader.get<dc.SimpleClass>(ms,schema)); }
+            while (ms.Position<ms.Length);
+
+            const int columncount = 4;  // Number of columns (p1,p2,p3,p4...) Solution.RAWDATA has
             IRIS iris = GatewayContext.GetIRIS();
-
-            // Save decoded values into IRIS via Native API
-            seqno = (long)iris.ClassMethodLong("Solution.RAWDATA", "GETNEWID");
             IRISList list = new IRISList();
-            for (int i = 0; i < elementcount; i += columncount)
+            IRISObject newrequest;
+            int elementcount;
+            foreach (dc.SimpleClass simple in items)
             {
-                list.Clear();
-                for (int j = 0; j < columncount; j++) {
-                    list.Add(array[i+j]);
+                elementcount=simple.myBytes.Length;
+                // get unique value via Native API
+                seqno = (long)iris.ClassMethodLong("Solution.RAWDATA", "GETNEWID");
+                for (int i = 0; i < elementcount; i += columncount)
+                {
+                    list.Clear();
+                    for (int j = 0; j < columncount; j++) {
+                        if ((i+j+1)==elementcount) { break; };
+                        list.Add(simple.myBytes[i+j]);
+                    }
+                    iris.ClassMethodStatusCode("Solution.RAWDATA", "INSERT", seqno, list);
                 }
-                iris.ClassMethodStatusCode("Solution.RAWDATA", "INSERT", seqno, list);
-            }
 
-            IRISObject newrequest = (IRISObject)iris.ClassMethodObject("Solution.RAWDATAC", "%New", seqno);
+                newrequest = (IRISObject)iris.ClassMethodObject("Solution.RAWDATAC", "%New", seqno);
 
-            // Iterate through target business components and send request message
-            string[] targetNames = TargetConfigNames.Split(',');
-            foreach (string name in targetNames)
-            {
-                SendRequestAsync(name, newrequest);
-                LOGINFO("Target:" + name);
-
+                // Iterate through target business components and send request message
+                string[] targetNames = TargetConfigNames.Split(',');
+                foreach (string name in targetNames)
+                {
+                    SendRequestAsync(name, newrequest);
+                    LOGINFO("Target:" + name);
+                }
             }
             return null;
         }

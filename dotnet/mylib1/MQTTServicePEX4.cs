@@ -8,10 +8,16 @@ namespace dc
 {
     public class MQTTServicePEX4 : InterSystems.EnsLib.PEX.BusinessService
     {
+        dc.MyLibrary mylib = new dc.MyLibrary();
         public string TargetConfigNames;
 
-        public override void OnTearDown() { } // Abstract method in PEX superclass. Must override.
-        public override void OnInit() { } // Abstract method in PEX superclass. Must override.
+        public override void OnTearDown() { 
+            mylib.XEPClose();
+        } // Abstract method in PEX superclass. Must override.
+
+        public override void OnInit() { 
+            mylib.XEPConnect();
+        } // Abstract method in PEX superclass. Must override.
 
         public override object OnProcessInput(object request)
         {
@@ -37,19 +43,14 @@ namespace dc
             
             // Add all record(s) into a list
             var items = new List<dc.SimpleClass>();
-            dc.SimpleClass s;
 
             // Repeat it until ms depleted.
-            do {
-                s = (dc.SimpleClass)dc.ReflectReader.get<dc.SimpleClass>(ms,schema);
-                items.Add(s);
-            }
+            do { items.Add((dc.SimpleClass)dc.ReflectReader.get<dc.SimpleClass>(ms,schema)); }
             while (ms.Position<ms.Length);
 
-            // Can't send XEP(dotnet) class as is.  So we need to create a simple message class via Native API to hold it.
+            // Can't send XEP(dotnet) class as is.  So we need to create a simple message class which referes to it.
             IRIS iris = GatewayContext.GetIRIS();
             IRISObject newrequest;
-            dc.MyLibrary mylib = new dc.MyLibrary();
             foreach (dc.SimpleClass simple in items)
             {
                 // Save decoded data into IRIS via XEP

@@ -57,7 +57,7 @@ public class SimpleClass
             myBool = true,
             myDouble = 3.14,
             myFloat = (float)1.59E-2,
-            myBytes = new byte[3] { 0x01, 0x02, 0x03 },
+            myBytes = new byte[8] { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,},
             myString = "this is a SimpleClass",
             myArray = new List<byte[]>() { new byte[] { 0x01, 0x02, 0x03, 0x04 } },
             myMap = new Dictionary<string, string>()

@@ -37,7 +37,6 @@ namespace dc
             
             // Add all record(s) into a list
             var items = new List<dc.SimpleClass>();
-            dc.SimpleClass s;
 
             // Repeat it until ms depleted.
             do { items.Add((dc.SimpleClass)dc.ReflectReader.get<dc.SimpleClass>(ms,schema)); }
@@ -48,7 +47,7 @@ namespace dc
             IRISList myarray = new IRISList();
             foreach (dc.SimpleClass simple in items)
             {
-                // Save decoded values into IRIS via Native API
+                // get unique value via Native API
                 seqno = (long)iris.ClassMethodLong("Solution.SimpleClass", "GETNEWID");
 
                 myarray.Clear();

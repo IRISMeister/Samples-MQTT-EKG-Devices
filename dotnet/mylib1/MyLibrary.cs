@@ -12,6 +12,8 @@ namespace dc
 {
     public class MyLibrary
     {
+        EventPersister xepPersister = PersisterFactory.CreatePersister();
+
 	    public IRISObject DoSomethingNative(String mqtttopic, String mqttmsg)
         {
             long seqno;
@@ -185,7 +187,13 @@ namespace dc
 
         public void XEPImport(string classFullName)
         {
-            EventPersister xepPersister = PersisterFactory.CreatePersister();
+            XEPConnect();
+            xepPersister.ImportSchema(classFullName);   // import flat schema
+            XEPClose();
+        }   
+        public void XEPConnect()
+        {
+            //EventPersister xepPersister = PersisterFactory.CreatePersister();
 
             String host = "iris";
             int port = 1972;
@@ -193,29 +201,18 @@ namespace dc
             String password = "SYS";
             String Namespace = "INTEROP";
             xepPersister.Connect(host, port, Namespace, username, password); 
-
-            xepPersister.ImportSchema(classFullName);   // import flat schema
+        } 
+        public void XEPClose()
+        {
             xepPersister.Close();
-            
-        }   
+        }
         public void XEP(string classFullName, dc.SimpleClass e)
         {
-            EventPersister xepPersister = PersisterFactory.CreatePersister();
-
-            String host = "iris";
-            int port = 1972;
-            String username = "SuperUser";
-            String password = "SYS";
-            String Namespace = "INTEROP";
-            xepPersister.Connect(host, port, Namespace, username, password); 
-
-            // It's not a good idea at all.
+            // Calling ImportSchema() everytime may not a good idea.
             xepPersister.ImportSchema(classFullName);   // import flat schema
             Event xepEvent = xepPersister.GetEvent(classFullName, Event.INDEX_MODE_SYNC);
             xepEvent.Store(e);
             xepEvent.Close();
-            xepPersister.Close();
-            
         }        
     }
 }
