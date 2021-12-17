@@ -12,6 +12,10 @@ os.close(fd)
 bytes_reader = io.BytesIO(byte_data)
 decoder = avro.io.BinaryDecoder(bytes_reader)
 reader = avro.io.DatumReader(schema)
-data = reader.read(decoder)
 
+# How do I know how many records are encoded?
+data = reader.read(decoder)
 print(data)
+data = reader.read(decoder)
+print(data)
+

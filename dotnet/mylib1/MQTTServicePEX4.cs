@@ -6,12 +6,18 @@ using InterSystems.Data.IRISClient.ADO;
 
 namespace dc
 {
-    public class MQTTServicePEX : InterSystems.EnsLib.PEX.BusinessService
+    public class MQTTServicePEX4 : InterSystems.EnsLib.PEX.BusinessService
     {
+        dc.MyLibrary mylib = new dc.MyLibrary();
         public string TargetConfigNames;
 
-        public override void OnTearDown() { } // Abstract method in PEX superclass. Must override.
-        public override void OnInit() { } // Abstract method in PEX superclass. Must override.
+        public override void OnTearDown() { 
+            mylib.XEPClose();
+        } // Abstract method in PEX superclass. Must override.
+
+        public override void OnInit() { 
+            mylib.XEPConnect();
+        } // Abstract method in PEX superclass. Must override.
 
         public override object OnProcessInput(object request)
         {
@@ -42,28 +48,19 @@ namespace dc
             do { items.Add((dc.SimpleClass)dc.ReflectReader.get<dc.SimpleClass>(ms,schema)); }
             while (ms.Position<ms.Length);
 
-            const int columncount = 4;  // Number of columns (p1,p2,p3,p4...) Solution.RAWDATA has
+            // Can't send XEP(dotnet) class as is.  So we need to create a simple message class which referes to it.
             IRIS iris = GatewayContext.GetIRIS();
-            IRISList list = new IRISList();
             IRISObject newrequest;
-            int elementcount;
             foreach (dc.SimpleClass simple in items)
             {
-                elementcount=simple.myBytes.Length;
-                // get unique value via Native API
-                seqno = (long)iris.ClassMethodLong("Solution.RAWDATA", "GETNEWID");
-                for (int i = 0; i < elementcount; i += columncount)
-                {
-                    list.Clear();
-                    for (int j = 0; j < columncount; j++) {
-                        if ((i+j+1)==elementcount) { break; };
-                        list.Add(simple.myBytes[i+j]);
-                    }
-                    iris.ClassMethodStatusCode("Solution.RAWDATA", "INSERT", seqno, list);
-                }
+                // Save decoded data into IRIS via XEP
+                mylib.XEP("dc.SimpleClass", simple);
 
-                newrequest = (IRISObject)iris.ClassMethodObject("Solution.RAWDATAC", "%New", seqno);
-
+                // Use myLong as an unique key. 
+                seqno = simple.myLong;
+                // Save a container message into IRIS via Native API
+                newrequest = (IRISObject)iris.ClassMethodObject("Solution.SimpleClassC", "%New", topic,seqno);
+                
                 // Iterate through target business components and send request message
                 string[] targetNames = TargetConfigNames.Split(',');
                 foreach (string name in targetNames)

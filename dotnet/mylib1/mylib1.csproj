@@ -11,6 +11,8 @@
   <ItemGroup>
     <PackageReference Include="IRISGatewayCore21" Version="1.0.0" />
     <PackageReference Include="IRISProviderCore21" Version="1.0.0" />
+    <PackageReference Include="IRISUtilsCore21" Version="1.0.0" />
+    <PackageReference Include="IRISXEPCore21" Version="1.0.0" />
     <PackageReference Include="Apache.Avro" Version="1.11.0" />
   </ItemGroup>
 </Project>

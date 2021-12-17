@@ -5,11 +5,15 @@ using InterSystems.Data.IRISClient.Gateway;
 using InterSystems.Data.IRISClient.ADO;
 //for ADO.NET
 using InterSystems.Data.IRISClient;
+//for XEP
+using InterSystems.XEP;
 
 namespace dc
 {
     public class MyLibrary
     {
+        EventPersister xepPersister = PersisterFactory.CreatePersister();
+
 	    public IRISObject DoSomethingNative(String mqtttopic, String mqttmsg)
         {
             long seqno;
@@ -180,5 +184,35 @@ namespace dc
 
             return request;
         }
+
+        public void XEPImport(string classFullName)
+        {
+            XEPConnect();
+            xepPersister.ImportSchema(classFullName);   // import flat schema
+            XEPClose();
+        }   
+        public void XEPConnect()
+        {
+            //EventPersister xepPersister = PersisterFactory.CreatePersister();
+
+            String host = "iris";
+            int port = 1972;
+            String username = "SuperUser";
+            String password = "SYS";
+            String Namespace = "INTEROP";
+            xepPersister.Connect(host, port, Namespace, username, password); 
+        } 
+        public void XEPClose()
+        {
+            xepPersister.Close();
+        }
+        public void XEP(string classFullName, dc.SimpleClass e)
+        {
+            // Calling ImportSchema() everytime may not a good idea.
+            xepPersister.ImportSchema(classFullName);   // import flat schema
+            Event xepEvent = xepPersister.GetEvent(classFullName, Event.INDEX_MODE_SYNC);
+            xepEvent.Store(e);
+            xepEvent.Close();
+        }        
     }
 }
