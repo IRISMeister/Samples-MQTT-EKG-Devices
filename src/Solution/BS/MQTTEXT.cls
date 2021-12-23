@@ -1,5 +1,5 @@
 /// Description
-Class Solution.BS.MQTT Extends EnsLib.MQTT.Service.Passthrough
+Class Solution.BS.MQTTEXT Extends EnsLib.MQTT.Service.Passthrough
 {
 
 Property gw As %RegisteredObject;
