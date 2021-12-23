@@ -6,7 +6,7 @@ using InterSystems.Data.IRISClient.ADO;
 
 namespace dc
 {
-    public class MQTTServicePEX4 : InterSystems.EnsLib.PEX.BusinessService
+    public class MQTTService4 : InterSystems.EnsLib.PEX.BusinessService
     {
         dc.MyLibrary mylib = new dc.MyLibrary();
         public string TargetConfigNames;
@@ -65,8 +65,8 @@ namespace dc
                 string[] targetNames = TargetConfigNames.Split(',');
                 foreach (string name in targetNames)
                 {
-                    SendRequestAsync(name, newrequest);
                     LOGINFO("Target:" + name);
+                    SendRequestAsync(name, newrequest);
                 }
             }
             return null;

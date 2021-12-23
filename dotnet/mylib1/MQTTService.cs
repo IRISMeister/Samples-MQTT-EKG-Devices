@@ -6,7 +6,7 @@ using InterSystems.Data.IRISClient.ADO;
 
 namespace dc
 {
-    public class MQTTServicePEX2 : InterSystems.EnsLib.PEX.BusinessService
+    public class MQTTService : InterSystems.EnsLib.PEX.BusinessService
     {
         public string TargetConfigNames;
 
@@ -42,20 +42,36 @@ namespace dc
             do { items.Add((dc.SimpleClass)dc.ReflectReader.get<dc.SimpleClass>(ms,schema)); }
             while (ms.Position<ms.Length);
 
+            const int columncount = 4;  // Number of columns (p1,p2,p3,p4...) Solution.RAWDATA has
             IRIS iris = GatewayContext.GetIRIS();
-            MQTTRequest newrequest;
+            IRISList list = new IRISList();
+            IRISObject newrequest;
+            int elementcount;
             foreach (dc.SimpleClass simple in items)
             {
+                elementcount=simple.myBytes.Length;
                 // get unique value via Native API
-                seqno = (long)iris.ClassMethodLong("Solution.MQTTDATA", "GETNEWID");
-                // Pass an array as a comma separated String value.
-                newrequest = new MQTTRequest(topic,seqno,String.Join(",",simple.myBytes));
+                seqno = (long)iris.ClassMethodLong("Solution.RAWDATA", "GETNEWID");
+
+                //Split received array into rows.
+                for (int i = 0; i < elementcount; i += columncount)
+                {
+                    list.Clear();
+                    for (int j = 0; j < columncount; j++) {
+                        if ((i+j+1)==elementcount) { break; };
+                        list.Add(simple.myBytes[i+j]);
+                    }
+                    iris.ClassMethodStatusCode("Solution.RAWDATA", "INSERT", seqno, list);
+                }
+
+                newrequest = (IRISObject)iris.ClassMethodObject("Solution.RAWDATAC", "%New", seqno);
+
                 // Iterate through target business components and send request message
                 string[] targetNames = TargetConfigNames.Split(',');
                 foreach (string name in targetNames)
                 {
-                    SendRequestAsync(name, newrequest);
                     LOGINFO("Target:" + name);
+                    SendRequestAsync(name, newrequest);
                 }
             }
             return null;
