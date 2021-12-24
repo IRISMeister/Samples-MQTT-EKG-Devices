@@ -107,19 +107,32 @@ namespace dc
         ms.Position = 0;
         stream = ms;
     }
+        
+    public static List<S> decode<S>(byte[] b)
+    {
+            MemoryStream ms = new MemoryStream();
+            ms.Write(b, 0, b.Length);
+            ms.Position = 0;
 
-
-        public static S get<S>(Stream ms, string writerSchema)
-        {
-            Avro.Schema ws = Schema.Parse(writerSchema);
-
+            System.Reflection.FieldInfo field = typeof(S).GetField("SCHEMA");
+            string schema=(string)field.GetValue(null);
+            Avro.Schema ws = Schema.Parse(schema);
             ReflectReader<S> r = new ReflectReader<S>(ws, ws);
             Decoder d = new BinaryDecoder(ms);
-            return r.Read(default(S), new BinaryDecoder(ms));
-        }
+
+            // Add all record(s) into a list
+            var items = new List<S>();
+
+            // Repeat it until ms depleted.
+            do { 
+                items.Add(  (S)(r.Read(default(S), new BinaryDecoder(ms)))  ); 
+            }
+            while (ms.Position<ms.Length);
+            return items;
+
+    }
         
-        
-        public static S deserialize<S>(Stream ms, Avro.Schema ws, Avro.Schema rs)
+    public static S deserialize<S>(Stream ms, Avro.Schema ws, Avro.Schema rs)
     {
         //S deserialized = null;
         long initialPos = ms.Position;

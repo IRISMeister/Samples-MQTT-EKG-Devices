@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using InterSystems.Data.IRISClient.Gateway;
 using InterSystems.Data.IRISClient.ADO;
 
@@ -12,8 +13,6 @@ namespace dc
 
         public override object OnMessage(object request)
         {
-            long seqno;
-
             LOGINFO("Message Received");
             IRISObject req = (IRISObject)request;
             LOGINFO("Received object: " + req.InvokeString("%ClassName", 1));
@@ -24,33 +23,17 @@ namespace dc
             String topic = req.GetString("Topic");
             LOGINFO("Received topic: " + topic);
 
-            // Decode value (raw data) into rows. It depends on how they are encoded.
-            //
-            // ++Write your code here++
-            int elementcount = 2000;
-            int columncount = 4;
-
-            int[] array = new int[elementcount];
-            for (int i = 0; i < elementcount; i++)
-            {
-                array[i] = i;
-            }
-            // --Write your code here--
+            // Decode AVRO
+            byte[] b = req.GetBytes("StringValue");
+            List<dc.SimpleClass> items = dc.ReflectReader.decode<dc.SimpleClass>(b);
 
             IRIS iris = GatewayContext.GetIRIS();
 
-            // Save decoded values into IRIS via Native API
-            seqno = (long)iris.ClassMethodLong("Solution.RAWDATA", "GETNEWID");
-            IRISList list = new IRISList();
-            for (int i = 0; i < elementcount; i += columncount)
+            foreach (dc.SimpleClass simple in items)
             {
-                list.Clear();
-                for (int j = 0; j < columncount; j++) {
-                    list.Add(array[i+j]);
-                }
-                iris.ClassMethodStatusCode("Solution.RAWDATA", "INSERT", seqno, list);
-            }
+                //Do whatever you want.
 
+            }
             return null;
         }
 
