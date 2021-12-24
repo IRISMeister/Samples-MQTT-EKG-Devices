@@ -28,19 +28,7 @@ namespace dc
 
             // Decode AVRO
             byte[] b = req.GetBytes("StringValue");
-            MemoryStream ms = new MemoryStream();
-            ms.Write(b, 0, b.Length);
-            ms.Position = 0;
-
-            string schema;
-            schema=dc.SimpleClass.SCHEMA;
-            
-            // Add all record(s) into a list
-            var items = new List<dc.SimpleClass>();
-
-            // Repeat it until ms depleted.
-            do { items.Add((dc.SimpleClass)dc.ReflectReader.get<dc.SimpleClass>(ms,schema)); }
-            while (ms.Position<ms.Length);
+            List<dc.SimpleClass> items = dc.ReflectReader.decode<dc.SimpleClass>(b);
 
             IRIS iris = GatewayContext.GetIRIS();
             IRISObject newrequest;
